@@ -30,6 +30,7 @@ let options = {
 };
 //lets initate express and set it to app
 const app = new express();
+app.use(express.static('public'));
 app.set("twig options", {
     strict_variables: false
 });
