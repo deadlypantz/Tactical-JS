@@ -2,7 +2,6 @@
 require('dotenv').config();
 //lets first start by creating the server so lets load https, http, and express
 const http = require('http');
-const https = require('https');
 const express = require('express');
 const Twig = require('twig');
 //now for local we will need to have ssl enabled, lets start with including filesystem and morgan to read files we'll need.  and logging.
@@ -24,11 +23,6 @@ const dbSettings = {
 
 const knex = require('knex')(dbSettings);
 const bookshelf = require('bookshelf')(knex);
-// let options = {
-//     key: fs.readFileSync('./key.pem'),
-//     cert: fs.readFileSync('./cert.pem'),
-// };
-let options = {};
 //lets initate express and set it to app
 const app = new express();
 app.use(express.static('public'));
@@ -62,6 +56,6 @@ app.use((err,req, res, next) => {
 app.disable('etag');
 //now lets deploy the server on 443
 
-https.createServer(options, app).listen(process.env.SERVER_PORT, () => {
+http.createServer(app).listen(process.env.SERVER_PORT, () => {
     console.log('Server Spawned on port 3000');
 });
