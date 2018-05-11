@@ -57,5 +57,5 @@ app.disable('etag');
 //now lets deploy the server on 443
 
 http.createServer(app).listen(process.env.SERVER_PORT, () => {
-    console.log('Server Spawned on port 3000');
+    console.log('Server Spawned on port ' + process.env.SERVER_PORT);
 });
