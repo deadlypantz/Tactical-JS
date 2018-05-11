@@ -6,10 +6,13 @@
   "author": "Eric Glazebrook <ericglazebrook@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
     "bookshelf": "^0.13.3",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "knex": "^0.14.6",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0"
   }
 }

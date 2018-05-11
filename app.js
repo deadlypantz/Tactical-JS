@@ -1,3 +1,5 @@
+//lets first load out database config files.
+require('dotenv').config();
 //lets first start by creating the server so lets load https, http, and express
 const http = require('http');
 const https = require('https');
@@ -5,13 +7,37 @@ const express = require('express');
 //now for local we will need to have ssl enabled, lets start with including filesystem and morgan to read files we'll need.  and logging.
 const fs = require('fs');
 const logger = require('morgan');
+
+//set dbSettings using .env
+const dbSettings = {
+    client: 'mysql',
+    connection: {
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME,
+        charset: 'utf8'
+    }
+};
+//connect to db and use bookshelf.
+const knex = require('knex')(dbSettings);
+const bookshelf = require('bookshelf')(knex);
 let options = {
     key: fs.readFileSync('./ssl/key.key'),
     cert: fs.readFileSync('./ssl/cert.crt'),
 };
-
 //lets initate express and set it to app
 const app = new express();
+app.set('bookshelf', bookshelf);
+app.set('knex', knex);
+const users = require('./Models/users')(app);
+users.where('id', 4).fetch().then((user) => {
+    if(!user) {
+        console.log('Sorry Record Doesn\'t Exist');
+    }   
+}).catch((error)=>{
+    console.log(error);
+})
 
 //now lets deal with middleware.
 app.use(logger('dev'));
