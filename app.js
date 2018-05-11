@@ -24,10 +24,11 @@ const dbSettings = {
 
 const knex = require('knex')(dbSettings);
 const bookshelf = require('bookshelf')(knex);
-let options = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem'),
-};
+// let options = {
+//     key: fs.readFileSync('./key.pem'),
+//     cert: fs.readFileSync('./cert.pem'),
+// };
+let options = {};
 //lets initate express and set it to app
 const app = new express();
 app.use(express.static('public'));
@@ -61,6 +62,6 @@ app.use((err,req, res, next) => {
 app.disable('etag');
 //now lets deploy the server on 443
 
-https.createServer(options, app).listen(443, () => {
-    console.log('Server Spawned at: https://ar.bar/');
+https.createServer(options, app).listen(process.env.SERVER_PORT, () => {
+    console.log('Server Spawned on port 3000');
 });
