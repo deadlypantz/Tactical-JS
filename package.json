@@ -1,0 +1,15 @@
+{
+  "name": "AR_Beta",
+  "version": "1.0.0",
+  "description": "AR is a script for kings of chaos this package is only for backend side of it.",
+  "main": "app.js",
+  "author": "Eric Glazebrook <ericglazebrook@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bookshelf": "^0.13.3",
+    "express": "^4.16.3",
+    "knex": "^0.14.6",
+    "morgan": "^1.9.0"
+  }
+}
