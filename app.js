@@ -4,10 +4,11 @@ require('dotenv').config();
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const Twig = require('twig');
 //now for local we will need to have ssl enabled, lets start with including filesystem and morgan to read files we'll need.  and logging.
 const fs = require('fs');
 const logger = require('morgan');
-
+const bodyParser = require('body-parser');
 //set dbSettings using .env
 const dbSettings = {
     client: 'mysql',
@@ -20,25 +21,23 @@ const dbSettings = {
     }
 };
 //connect to db and use bookshelf.
+
 const knex = require('knex')(dbSettings);
 const bookshelf = require('bookshelf')(knex);
 let options = {
-    key: fs.readFileSync('./ssl/key.key'),
-    cert: fs.readFileSync('./ssl/cert.crt'),
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
 };
 //lets initate express and set it to app
 const app = new express();
+app.set("twig options", {
+    strict_variables: false
+});
 app.set('bookshelf', bookshelf);
 app.set('knex', knex);
-const users = require('./Models/users')(app);
-users.where('id', 4).fetch().then((user) => {
-    if(!user) {
-        console.log('Sorry Record Doesn\'t Exist');
-    }   
-}).catch((error)=>{
-    console.log(error);
-})
-
+//add body-parser
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 //now lets deal with middleware.
 app.use(logger('dev'));
 

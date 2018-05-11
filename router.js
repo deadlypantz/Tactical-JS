@@ -1,5 +1,4 @@
-module.exports = (app) => {
-    app.get('/', (req, res) => {
-        res.send("Test");
-    })
+module.exports = (app) => { 
+    const homeController = require('./Controllers/homeController')(app);
+    app.get('/', homeController.displayHome);
 };
