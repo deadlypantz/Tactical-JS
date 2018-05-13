@@ -1,6 +1,5 @@
 node_modules
 .env
-ssl/
 yarn.lock
-key.pem
-cert.pem
+package-lock.json
+public/

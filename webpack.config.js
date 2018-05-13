@@ -11,11 +11,11 @@ module.exports = {
     module:{
         rules:[
             {
-                test: /\.s?[ac]ss$/, 
+                test: /\.scss$/, 
                 use: [
                     ExtractTextPlugin.loader,
                     'css-loader',
-                    'sass-loader'
+                    'sass-loader',
                 ]
             }
         ]
@@ -23,14 +23,9 @@ module.exports = {
     plugins: [
         new UglifyJSPlugin(),
         new ExtractTextPlugin({
-            filename: "css/app.big.css"
+            filename: "css/app.css"
         }),
-        new mini({
-            assetNameRegExp: /\.optimize\.sass$/g,
-            cssProcessor: require('cssnano'),
-            cssProcessorOptions: { discardComments: { removeAll: true } },
-            canPrint: true
-        }),
+        new mini({}),
     ],
     mode: 'production'
 };

@@ -1,13 +1,14 @@
 //lets first load out database config files.
-require('dotenv').config();
+require('dotenv').config()
 //lets first start by creating the server so lets load https, http, and express
-const http = require('http');
-const express = require('express');
-const Twig = require('twig');
+const http = require('http')
+const Koa = require('koa')
+const Router = require('koa-router')
+const Twig = require('twig')
+const views = require('koa-views')
+const mongoose = require('mongoose')
 //now for local we will need to have ssl enabled, lets start with including filesystem and morgan to read files we'll need.  and logging.
-const fs = require('fs');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
+const logger = require('koa-logger')
 //set dbSettings using .env
 const dbSettings = {
     client: 'mysql',
@@ -18,44 +19,24 @@ const dbSettings = {
         database: process.env.DB_NAME,
         charset: 'utf8'
     }
-};
-//connect to db and use bookshelf.
+}
+//connect to db and use objectionJS.
+if(process.env.DB_TYPE != 'mongodb') {
+    const knex = require('knex')(dbSettings)
+    const { Model } = require('objection')
+    Model.knex(knex)
+} else {
+    mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`) 
+}
 
-const knex = require('knex')(dbSettings);
-const bookshelf = require('bookshelf')(knex);
+
 //lets initate express and set it to app
-const app = new express();
-app.use(express.static('public'));
-app.set("twig options", {
-    strict_variables: false
-});
-app.set('bookshelf', bookshelf);
-app.set('knex', knex);
-//add body-parser
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+const app = new Koa()
 //now lets deal with middleware.
-app.use(logger('dev'));
-
-require('./router')(app);
-app.use((req, res, next) => {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-app.use((err,req, res, next) => {
-    res.status(err.status || 500);
-    err.message = err.message || "Internal Error";
-    err.status = err.status || 500;
-    res.send(`${err.status} ${err.message}`);
-});
+app.use(require('koa-static')('public'))
+app.use(views(__dirname + '/views', {extension: 'twig'}))
+app.use(logger('dev'))
+require('./router')(app)
 
 
-
-app.disable('etag');
-//now lets deploy the server on 443
-
-http.createServer(app).listen(process.env.SERVER_PORT, () => {
-    console.log('Server Spawned on port ' + process.env.SERVER_PORT);
-});
+app.listen(3000)

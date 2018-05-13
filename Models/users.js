@@ -1,7 +1,8 @@
-module.exports = (app) => {
-  const bookshelf = app.get('bookshelf');
-  const Users = bookshelf.Model.extend({
-        tableName: 'users'
-  }) ;
-  return Users;
-};
+const Model = require('objection').Model
+
+class Users extends Model {
+  static get tableName() {
+    return 'users'
+  }
+}
+module.exports = Users
