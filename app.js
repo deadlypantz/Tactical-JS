@@ -39,4 +39,6 @@ app.use(logger('dev'))
 require('./router')(app)
 
 
-app.listen(3000)
+app.listen(process.env.SERVER_PORT, () => {
+    console.log("Server Started on Port " + process.env.SERVER_PORT)
+})
