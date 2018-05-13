@@ -7,6 +7,7 @@ const Router = require('koa-router')
 const Twig = require('twig')
 const views = require('koa-views')
 const mongoose = require('mongoose')
+const bodyParser = require('koa-bodyparser')
 //now for local we will need to have ssl enabled, lets start with including filesystem and morgan to read files we'll need.  and logging.
 const logger = require('koa-logger')
 //set dbSettings using .env
@@ -33,6 +34,7 @@ if(process.env.DB_TYPE != 'mongodb') {
 //lets initate express and set it to app
 const app = new Koa()
 //now lets deal with middleware.
+app.use(bodyParser())
 app.use(require('koa-static')('public'))
 app.use(views(__dirname + '/views', {extension: 'twig'}))
 app.use(logger('dev'))
